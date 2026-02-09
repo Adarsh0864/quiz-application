@@ -4,7 +4,6 @@ services:
     name: quiz-backend
     runtime: docker
     dockerfilePath: ./Dockerfile
-    plan: free
     envVars:
       - key: MONGODB_URI
         sync: false  # Set manually in Render dashboard
@@ -19,7 +18,6 @@ services:
     runtime: static
     buildCommand: cd quiz-frontend && npm install && npm run build
     staticPublishPath: quiz-frontend/dist
-    plan: free
     envVars:
       - key: VITE_API_URL
         value: https://quiz-backend-XXXX.onrender.com/api  # Update after backend deploys
