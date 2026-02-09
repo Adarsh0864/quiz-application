@@ -1,13 +1,15 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import API from '../api';
 
 export default function TakeQuiz() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const playerName = user?.name || 'Anonymous';
 
   const [quiz, setQuiz] = useState(null);
-  const [playerName, setPlayerName] = useState('');
   const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [currentQ, setCurrentQ] = useState(0);
@@ -60,16 +62,10 @@ export default function TakeQuiz() {
         <h1 className="text-2xl font-bold">{quiz.title}</h1>
         <p className="text-gray-500">{quiz.description}</p>
         <p className="text-sm">⏱ Time limit: {quiz.timeLimitMinutes} min &nbsp;|&nbsp; 📝 {quiz.questions.length} questions</p>
-        <input
-          className="w-full border rounded px-3 py-2"
-          placeholder="Enter your name"
-          value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
-        />
+        <p className="text-sm text-indigo-600 font-medium">Playing as: {playerName}</p>
         <button
-          disabled={!playerName.trim()}
           onClick={() => setStarted(true)}
-          className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 disabled:opacity-40 font-medium w-full"
+          className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 font-medium w-full"
         >
           Start Quiz
         </button>
