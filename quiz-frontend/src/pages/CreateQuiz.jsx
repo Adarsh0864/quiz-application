@@ -44,11 +44,34 @@ export default function CreateQuiz() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Validate questions
+    for (const [index, question] of questions.entries()) {
+      if (!question.questionText.trim()) {
+        setError(`Question ${index + 1}: Please enter question text`);
+        return;
+      }
+      
+      // Check if all options are filled
+      const emptyOptions = question.options.filter(opt => !opt.trim()).length;
+      if (emptyOptions > 0) {
+        setError(`Question ${index + 1}: Please fill in all 4 options`);
+        return;
+      }
+    }
+    
     try {
+      console.log('Submitting quiz:', { title, description, timeLimitMinutes, questions });
       await API.post('/quizzes', { title, description, timeLimitMinutes, questions });
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create quiz');
+      console.error('Submit error:', err);
+      const errData = err.response?.data;
+      if (errData?.errors && typeof errData.errors === 'object') {
+        setError(Object.values(errData.errors).join(', '));
+      } else {
+        setError(errData?.message || err.message || 'Failed to create quiz');
+      }
     }
   };
 
@@ -129,15 +152,14 @@ export default function CreateQuiz() {
                   onChange={() => updateQuestion(qi, 'correctOptionIndex', oi)}
                 />
                 <input
-                  className="flex-1 border rounded px-3 py-1"
-                  placeholder={`Option ${oi + 1}`}
+                  className={`flex-1 border rounded px-3 py-1 ${!opt.trim() ? 'border-red-300 bg-red-50' : ''}`}
+                  placeholder={`Option ${oi + 1} (required)`}
                   value={opt}
                   onChange={(e) => updateOption(qi, oi, e.target.value)}
-                  required
                 />
               </div>
             ))}
-            <p className="text-xs text-gray-400">Select the radio button next to the correct answer.</p>
+            <p className="text-xs text-gray-600 font-medium">⚠️ Fill all 4 options and select the correct answer with the radio button.</p>
           </div>
         ))}
 

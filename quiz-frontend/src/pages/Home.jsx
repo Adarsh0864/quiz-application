@@ -5,21 +5,40 @@ import API from '../api';
 export default function Home() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     API.get('/quizzes')
-      .then((res) => setQuizzes(res.data))
-      .catch((err) => console.error(err))
+      .then((res) => {
+        console.log('API Response:', res.data);
+        setQuizzes(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((err) => {
+        console.error('API Error:', err);
+        setError(err.response?.data?.message || err.message || 'Failed to load quizzes');
+      })
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <p className="text-center mt-10">Loading quizzes…</p>;
+  
+  if (error) return (
+    <div className="text-center mt-10">
+      <p className="text-red-600 mb-4">Error: {error}</p>
+      <button 
+        onClick={() => window.location.reload()} 
+        className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+      >
+        Retry
+      </button>
+    </div>
+  );
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Available Quizzes</h1>
 
-      {quizzes.length === 0 ? (
+      {!quizzes || quizzes.length === 0 ? (
         <p className="text-gray-500">
           No quizzes yet.{' '}
           <Link to="/create" className="text-indigo-600 underline">Create one!</Link>
@@ -31,7 +50,7 @@ export default function Home() {
               <h2 className="text-xl font-semibold">{q.title}</h2>
               <p className="text-gray-500 text-sm mt-1">{q.description}</p>
               <p className="text-sm mt-2">
-                📝 {q.questions.length} questions &nbsp;|&nbsp; ⏱ {q.timeLimitMinutes} min
+                📝 {q.questions?.length || 0} questions &nbsp;|&nbsp; ⏱ {q.timeLimitMinutes} min
               </p>
               <div className="mt-4 flex gap-2">
                 <Link
