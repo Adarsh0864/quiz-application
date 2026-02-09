@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface QuizAttemptRepository extends MongoRepository<QuizAttempt, String> {
-    List<QuizAttempt> findByQuizId(String quizId);
+
     List<QuizAttempt> findByQuizIdOrderByScoreDesc(String quizId);
 }

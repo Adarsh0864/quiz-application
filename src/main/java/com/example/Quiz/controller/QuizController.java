@@ -7,7 +7,6 @@ import com.example.Quiz.model.QuizAttempt;
 import com.example.Quiz.service.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +29,7 @@ public class QuizController {
 
     @PostMapping
     @Operation(summary = "Create a new quiz")
-    public ResponseEntity<Quiz> createQuiz(@Valid @RequestBody Quiz quiz) {
+    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
         return new ResponseEntity<>(quizService.createQuiz(quiz), HttpStatus.CREATED);
     }
 
@@ -48,7 +47,7 @@ public class QuizController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing quiz")
-    public ResponseEntity<Quiz> updateQuiz(@PathVariable String id, @Valid @RequestBody Quiz quiz) {
+    public ResponseEntity<Quiz> updateQuiz(@PathVariable String id, @RequestBody Quiz quiz) {
         return ResponseEntity.ok(quizService.updateQuiz(id, quiz));
     }
 
@@ -65,7 +64,7 @@ public class QuizController {
     @Operation(summary = "Submit answers for a quiz and get score")
     public ResponseEntity<ScoreResponse> submitQuiz(
             @PathVariable String id,
-            @Valid @RequestBody QuizSubmitRequest request) {
+            @RequestBody QuizSubmitRequest request) {
         return new ResponseEntity<>(quizService.submitQuiz(id, request), HttpStatus.OK);
     }
 

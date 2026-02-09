@@ -1,33 +1,42 @@
 package com.example.Quiz.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Document(collection = "quizzes")
 public class Quiz {
 
     @Id
     private String id;
-
-    @NotBlank(message = "Title is required")
     private String title;
-
     private String description;
-
-    @NotEmpty(message = "Quiz must have at least one question")
     private List<Question> questions;
+    private int timeLimitMinutes;
 
-    @Min(value = 1, message = "Time limit must be at least 1 minute")
-    private int timeLimitMinutes; // duration in minutes
+    public Quiz() {}
+
+    public Quiz(String id, String title, String description, List<Question> questions, int timeLimitMinutes) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.questions = questions;
+        this.timeLimitMinutes = timeLimitMinutes;
+    }
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public List<Question> getQuestions() { return questions; }
+    public void setQuestions(List<Question> questions) { this.questions = questions; }
+
+    public int getTimeLimitMinutes() { return timeLimitMinutes; }
+    public void setTimeLimitMinutes(int timeLimitMinutes) { this.timeLimitMinutes = timeLimitMinutes; }
 }
