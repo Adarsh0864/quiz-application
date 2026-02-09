@@ -24,6 +24,7 @@ jobs:
           cd quiz-frontend
           npm install
           npm run build
+          cp staticwebapp.config.json dist/
         env:
           VITE_API_URL: https://quiz-backend-adarsh.azurewebsites.net/api
       - name: Build And Deploy
@@ -33,13 +34,10 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_COAST_0BAF2DC00 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/quiz-frontend" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "dist" # Built app content directory - optional
+          app_location: "/quiz-frontend/dist"
+          api_location: ""
+          output_location: ""
           skip_app_build: true
-          ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
