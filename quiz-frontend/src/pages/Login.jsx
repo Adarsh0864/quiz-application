@@ -100,14 +100,6 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 text-gray-500 cursor-pointer">
-              <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-              Remember for 30 days
-            </label>
-            <span className="text-blue-600 font-medium cursor-pointer hover:underline">Forgot password?</span>
-          </div>
-
           <button
             type="submit"
             disabled={loading}
